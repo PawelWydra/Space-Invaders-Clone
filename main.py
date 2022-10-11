@@ -35,7 +35,8 @@ for y_cor in range(4):
 screen.listen()
 screen.onkey(main_paddle.go_left, "a")
 screen.onkey(main_paddle.go_right, "d")
-screen.onkey(functools.partial(bullet_manager.create_bullet, (main_paddle.xcor(), main_paddle.ycor())), "w")
+screen.onkey(main_paddle.check_position, "c")
+screen.onkey(functools.partial(bullet_manager.create_bullet, main_paddle.check_position()), "w")
 
 
 game_is_on = True
@@ -43,8 +44,7 @@ while game_is_on:
     time.sleep(0.05)
     screen.update()
     bullet_manager.move()
-
-
+    # bullet_manager.create_bullet(main_paddle.check_position())
     # for paddle in paddles:
     #     if bullet.distance(paddle) < 30:
     #         bullet.goto(900, 900)

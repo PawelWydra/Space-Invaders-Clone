@@ -4,7 +4,7 @@ from turtle import Screen
 from bullet import BulletManager
 from paddle import Paddle
 from scoreboard import Scoreboard
-import functools
+
 
 
 screen = Screen()
@@ -23,6 +23,7 @@ x_cor_paddles = -330
 y_cor_paddles = 100
 for y_cor in range(4):
     for _ in range(11):
+        ### ADD IMG TO ENEMY ###
         paddle = Paddle((x_cor_paddles, y_cor_paddles))
         paddle.shapesize(stretch_wid=1, stretch_len=3)
         paddle.color(colors[y_cor])
@@ -35,8 +36,6 @@ for y_cor in range(4):
 screen.listen()
 screen.onkey(main_paddle.go_left, "a")
 screen.onkey(main_paddle.go_right, "d")
-screen.onkey(main_paddle.check_position, "c")
-screen.onkey(functools.partial(bullet_manager.create_bullet, main_paddle.check_position()), "w")
 
 
 game_is_on = True
@@ -44,12 +43,13 @@ while game_is_on:
     time.sleep(0.05)
     screen.update()
     bullet_manager.move()
-    # bullet_manager.create_bullet(main_paddle.check_position())
-    # for paddle in paddles:
-    #     if bullet.distance(paddle) < 30:
-    #         bullet.goto(900, 900)
-    #         paddle.goto(800, 800)
-    #         scoreboard.point()
+    bullet_manager.create_bullet(main_paddle.position())
+    for paddle in paddles:
+        for bullet in bullet_manager.bullets:
+            if bullet.distance(paddle) < 30:
+                bullet.goto(900, 900)
+                paddle.goto(800, 800)
+                scoreboard.point()
 
 screen.exitonclick()
 

@@ -13,24 +13,26 @@ screen.setup(width=800, height=600)
 screen.title("Pong")
 screen.tracer(0)
 screen.addshape('ship.gif')
+screen.addshape("alien.gif")
+screen.addshape("bullet.gif")
 
-main_paddle = Paddle((0, -250))
+main_paddle = Paddle((0, -230))
 bullet_manager = BulletManager()
 scoreboard = Scoreboard()
 colors = ["yellow", "green", "blue", "red"]
 paddles = []
-x_cor_paddles = -330
-y_cor_paddles = 100
+x_cor_paddles = -230
+y_cor_paddles = 30
 for y_cor in range(4):
     for _ in range(11):
         ### ADD IMG TO ENEMY ###
-        paddle = Paddle((x_cor_paddles, y_cor_paddles))
+        paddle = Paddle((x_cor_paddles, y_cor_paddles), "alien.gif")
         paddle.shapesize(stretch_wid=1, stretch_len=3)
         paddle.color(colors[y_cor])
-        x_cor_paddles += 65
+        x_cor_paddles += 45
         paddles.append(paddle)
-    x_cor_paddles = -330
-    y_cor_paddles += 30
+    x_cor_paddles = -230
+    y_cor_paddles += 60
 
 
 screen.listen()
@@ -45,6 +47,7 @@ while game_is_on:
     bullet_manager.move()
     bullet_manager.create_bullet(main_paddle.position())
     for paddle in paddles:
+        paddle.move()
         for bullet in bullet_manager.bullets:
             if bullet.distance(paddle) < 30:
                 bullet.goto(900, 900)

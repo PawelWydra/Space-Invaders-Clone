@@ -9,11 +9,11 @@ class BulletManager:
 
     def create_bullet(self, position):
         if self.count % 2 == 0:
-            new_bullet = Turtle("square")
-            new_bullet.color("red")
+            new_bullet = Turtle()
+            new_bullet.shape("bullet.gif")
             new_bullet.penup()
             new_bullet.left(90)
-            new_bullet.goto(position[0], position[1]+60)
+            new_bullet.goto(position[0] + 2, position[1]+70)
             self.bullets.append(new_bullet)
         self.count += 1
 

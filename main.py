@@ -2,7 +2,7 @@ import time
 from turtle import Screen
 
 from bullet import BulletManager
-from paddle import Paddle
+from ships import Ships
 from scoreboard import Scoreboard
 
 
@@ -15,25 +15,12 @@ screen.tracer(0)
 screen.addshape('ship.gif')
 screen.addshape("alien.gif")
 screen.addshape("bullet.gif")
+screen.addshape("enemy_bullet.gif")
 
-main_ship = Paddle((0, -230))
+main_ship = Ships((0, -230))
 bullet_manager = BulletManager()
 scoreboard = Scoreboard()
-colors = ["yellow", "green", "blue", "red"]
-enemies = []
-x_cor_paddles = -230
-y_cor_paddles = 30
-for y_cor in range(4):
-    for _ in range(11):
-        ### ADD IMG TO ENEMY ###
-        enemy = Paddle((x_cor_paddles, y_cor_paddles), "alien.gif")
-        enemy.shapesize(stretch_wid=1, stretch_len=3)
-        enemy.color(colors[y_cor])
-        x_cor_paddles += 45
-        enemies.append(enemy)
-    x_cor_paddles = -230
-    y_cor_paddles += 60
-
+main_ship.create_army()
 
 screen.listen()
 screen.onkey(main_ship.go_left, "a")
@@ -46,12 +33,32 @@ while game_is_on:
     screen.update()
     bullet_manager.move()
     bullet_manager.create_bullet(main_ship.position())
-    for enemy in enemies:
+
+    for enemy in main_ship.enemies:
         enemy.move()
+        bullet_manager.create_enemy_bullet(enemy.position())
         for bullet in bullet_manager.bullets:
             if bullet.distance(enemy) < 30:
                 bullet.goto(900, 900)
                 enemy.goto(800, 800)
                 scoreboard.point()
+
+    if scoreboard.score == 44:
+        main_ship.enemies.clear()
+        scoreboard.game_over()
+        time.sleep(1)
+        main_ship.create_army()
+        scoreboard.score = 0
+
+    for bullet in bullet_manager.alien_shots:
+        if bullet.distance(main_ship) < 30:
+            scoreboard.game_over()
+            scoreboard.score = 0
+            for enemy in main_ship.enemies:
+                enemy.reset()
+                enemy.goto(800, 800)
+            main_ship.enemies.clear()
+            main_ship.create_army()
+
 
 screen.exitonclick()
